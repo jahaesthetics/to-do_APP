@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//usr/local/**)",
+      "Read(//usr/**)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/Жахонгир/AppData/Roaming/**)",
+      "Read(//c/Users/Жахонгир/AppData/Local/**)",
+      "Bash(cmd.exe /c \"where node 2>nul & where npm 2>nul & node --version 2>nul & npm --version 2>nul\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(cmd.exe /c \"where npm 2>nul\")",
+      "Bash(cmd.exe /c \"where node 2>nul\")",
+      "Bash(cmd.exe /c \"node --version 2>nul\")",
+      "Bash(cmd.exe /c \"dir /b /s C:\\\\npm.cmd 2>nul | head -5\")",
+      "Bash(cmd.exe /c \"dir /b /s \"\"C:\\\\Program Files\\\\nodejs\"\" 2>nul\")",
+      "Bash(cmd.exe /c \"reg query HKLM\\\\SOFTWARE\\\\Node.js /v InstallPath 2>nul\")",
+      "Bash(cmd.exe /c 'powershell -NoProfile -Command $env:PATH')",
+      "Bash(tr ';' '\\\\n')",
+      "Bash(cmd.exe /c \"powershell -NoProfile -Command \"\"Get-Command npm -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source; Get-Command node -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source\"\"\")",
+      "Bash(cmd.exe /c \"powershell -NoProfile -Command \"\"Get-ChildItem -Path C:\\\\Users -Filter ''node*'' -Recurse -ErrorAction SilentlyContinue -Depth 6 | Select -First 10 -ExpandProperty FullName\"\"\")",
+      "Bash(cmd.exe /c \"winget --version 2>nul\")",
+      "Bash(cmd.exe /c \"winget install OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements 2>&1\")",
+      "Bash(cmd.exe /c \"powershell -NoProfile -Command \"\"Get-ChildItem -Path ''C:\\\\Program Files\\\\nodejs'' -ErrorAction SilentlyContinue | Select -First 5 -ExpandProperty Name\"\"\")",
+      "Bash(cmd.exe /c \"powershell -NoProfile -Command \"\"Invoke-WebRequest -Uri ''https://nodejs.org/dist/v20.15.0/node-v20.15.0-win-x64.zip'' -OutFile ''D:\\\\Claude\\\\to-do_APP\\\\node-portable.zip'' -UseBasicParsing; Write-Host ''Downloaded''\"\" 2>&1\")",
+      "Bash(python -c \":*)",
+      "Bash(\"node-portable/node-v20.15.0-win-x64/npm.cmd\" install:*)",
+      "Bash(export PATH=\"/d/Claude/to-do_APP/node-portable/node-v20.15.0-win-x64:$PATH\")",
+      "Bash(npm --version)",
+      "Bash(npm install:*)",
+      "Bash(cmd.exe /c \"netstat -ano | findstr :5173\")",
+      "Bash(kill %1)",
+      "Bash(pkill -f \"vite\")",
+      "Bash(cmd.exe /c \"taskkill /F /IM node.exe /T 2>nul\")",
+      "Bash(cmd.exe /c \"for /f \"\"tokens=5\"\" %a in \\(''netstat -ano ^| findstr :5173 ^| findstr LISTENING''\\) do taskkill /F /PID %a\")"
+    ]
+  }
+}

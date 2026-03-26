@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   THEME SYSTEM — CSS Custom Properties
+   ============================================ */
+
+:root,
+[data-theme="dark"] {
+  --color-bg: #0d0d14;
+  --color-surface: #13131f;
+  --color-surface-alt: #1a1a2e;
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-primary: #a855f7;
+  --color-primary-hover: #9333ea;
+  --color-primary-glow: rgba(168, 85, 247, 0.35);
+  --color-text-primary: #f1f0ff;
+  --color-text-secondary: #a8a7c4;
+  --color-text-muted: #5c5b7a;
+  --color-success: #22d3a5;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+  --transition-theme: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="midnight"] {
+  --color-bg: #060910;
+  --color-surface: #0d1117;
+  --color-surface-alt: #161b22;
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-primary: #58a6ff;
+  --color-primary-hover: #388bfd;
+  --color-primary-glow: rgba(88, 166, 255, 0.3);
+  --color-text-primary: #e6edf3;
+  --color-text-secondary: #8b949e;
+  --color-text-muted: #484f58;
+  --color-success: #3fb950;
+  --color-danger: #f85149;
+  --color-warning: #d29922;
+}
+
+[data-theme="forest"] {
+  --color-bg: #0a0f0a;
+  --color-surface: #0f1a0f;
+  --color-surface-alt: #162116;
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-primary: #4ade80;
+  --color-primary-hover: #22c55e;
+  --color-primary-glow: rgba(74, 222, 128, 0.3);
+  --color-text-primary: #ecfdf5;
+  --color-text-secondary: #86efac;
+  --color-text-muted: #4b7155;
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+}
+
+[data-theme="sunset"] {
+  --color-bg: #0f0a08;
+  --color-surface: #1a100b;
+  --color-surface-alt: #251610;
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-primary: #fb923c;
+  --color-primary-hover: #f97316;
+  --color-primary-glow: rgba(251, 146, 60, 0.3);
+  --color-text-primary: #fff7ed;
+  --color-text-secondary: #fed7aa;
+  --color-text-muted: #7c4a1e;
+  --color-success: #4ade80;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+}
+
+[data-theme="ocean"] {
+  --color-bg: #060d14;
+  --color-surface: #0a1628;
+  --color-surface-alt: #0f1f38;
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-primary: #22d3ee;
+  --color-primary-hover: #06b6d4;
+  --color-primary-glow: rgba(34, 211, 238, 0.3);
+  --color-text-primary: #ecfeff;
+  --color-text-secondary: #a5f3fc;
+  --color-text-muted: #1e6472;
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+}
+
+[data-theme="rose"] {
+  --color-bg: #0f080d;
+  --color-surface: #1a0f15;
+  --color-surface-alt: #26151e;
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-primary: #f472b6;
+  --color-primary-hover: #ec4899;
+  --color-primary-glow: rgba(244, 114, 182, 0.3);
+  --color-text-primary: #fff1f8;
+  --color-text-secondary: #fbcfe8;
+  --color-text-muted: #7c3a5a;
+  --color-success: #4ade80;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  transition: var(--transition-theme);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ============================================
+   GLASS MORPHISM UTILITY
+   ============================================ */
+
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid var(--color-border);
+}
+
+.glass-heavy {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ============================================
+   FOCUS STYLES
+   ============================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================================
+   SELECTION STYLING
+   ============================================ */
+
+::selection {
+  background: var(--color-primary-glow);
+  color: var(--color-text-primary);
+}
+
+/* ============================================
+   INPUT AUTOFILL FIX
+   ============================================ */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-text-primary);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-surface-alt) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ============================================
+   TASK STRIKE-THROUGH ANIMATION
+   ============================================ */
+
+.task-strikethrough {
+  position: relative;
+}
+
+.task-strikethrough::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 1.5px;
+  background: var(--color-text-muted);
+  width: 0;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.task-strikethrough.done::after {
+  width: 100%;
+}
+
+/* ============================================
+   GLOW INPUT FOCUS
+   ============================================ */
+
+.input-glow:focus {
+  box-shadow: 0 0 0 2px var(--color-primary-glow), 0 0 16px var(--color-primary-glow);
+}
+
+/* ============================================
+   NEON TEXT
+   ============================================ */
+
+.text-neon {
+  color: var(--color-primary);
+  text-shadow: 0 0 10px var(--color-primary-glow), 0 0 20px var(--color-primary-glow);
+}
+
+/* ============================================
+   PRIORITY INDICATORS
+   ============================================ */
+
+.priority-high { background: #f87171; }
+.priority-medium { background: #fbbf24; }
+.priority-low { background: #4ade80; }
+
+/* ============================================
+   RECHARTS OVERRIDES
+   ============================================ */
+
+.recharts-cartesian-grid line { stroke: transparent; }
+.recharts-tooltip-wrapper { outline: none; }
