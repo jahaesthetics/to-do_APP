@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Mail, Lock, User, Zap, Eye, EyeOff, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { cn } from '../lib/utils'
 
 export default function RegisterPage() {
+  const { t } = useTranslation()
   const { register } = useAuth()
   const navigate = useNavigate()
 
@@ -23,12 +25,12 @@ export default function RegisterPage() {
 
   const validate = () => {
     const e: typeof errors = {}
-    if (!displayName.trim()) e.displayName = 'Name is required'
-    else if (displayName.length < 2) e.displayName = 'At least 2 characters'
-    if (!email) e.email = 'Email is required'
-    else if (!/\S+@\S+\.\S+/.test(email)) e.email = 'Invalid email address'
-    if (!password) e.password = 'Password is required'
-    else if (password.length < 6) e.password = 'At least 6 characters'
+    if (!displayName.trim()) e.displayName = t('auth.err_name_req')
+    else if (displayName.length < 2) e.displayName = t('auth.err_name_min')
+    if (!email) e.email = t('auth.err_email_req')
+    else if (!/\S+@\S+\.\S+/.test(email)) e.email = t('auth.err_email_inv')
+    if (!password) e.password = t('auth.err_pass_req')
+    else if (password.length < 6) e.password = t('auth.err_pass_min')
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -39,14 +41,14 @@ export default function RegisterPage() {
     setLoading(true)
     try {
       await register(email, password, displayName)
-      toast.success(`Welcome, ${displayName}! Your quest begins 🚀`)
+      toast.success(t('auth.toast_welcome_new', { name: displayName }))
       navigate('/tasks')
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Registration failed'
       if (msg.includes('email-already-in-use')) {
-        toast.error('Email already registered. Try signing in.')
+        toast.error(t('auth.toast_err_email_in_use'))
       } else {
-        toast.error('Failed to create account. Try again.')
+        toast.error(t('auth.toast_err_register_generic'))
       }
     } finally {
       setLoading(false)
@@ -54,9 +56,9 @@ export default function RegisterPage() {
   }
 
   const perks = [
-    { icon: '⚡', text: 'Earn coins for every task' },
-    { icon: '🔥', text: 'Build daily streaks' },
-    { icon: '🏆', text: 'Level up your profile' },
+    { icon: '⚡', text: t('auth.perk_coins') },
+    { icon: '🔥', text: t('auth.perk_streaks') },
+    { icon: '🏆', text: t('auth.perk_level') },
   ]
 
   return (
@@ -96,7 +98,7 @@ export default function RegisterPage() {
           <h1 className="text-3xl font-bold text-textPrimary tracking-tight">
             Focus<span className="text-primary">Quest</span>
           </h1>
-          <p className="text-textSecondary text-sm mt-1">Your productivity adventure starts here</p>
+          <p className="text-textSecondary text-sm mt-1">{t('app.logo_sub_register')}</p>
         </motion.div>
 
         {/* Perks */}
@@ -128,16 +130,16 @@ export default function RegisterPage() {
           transition={{ delay: 0.15, duration: 0.4 }}
         >
           <div className="flex items-center gap-2 mb-1">
-            <h2 className="text-xl font-semibold text-textPrimary">Create account</h2>
+            <h2 className="text-xl font-semibold text-textPrimary">{t('auth.register_title')}</h2>
             <Sparkles className="w-4 h-4 text-primary" />
           </div>
-          <p className="text-textMuted text-sm mb-6">Join thousands of focused achievers</p>
+          <p className="text-textMuted text-sm mb-6">{t('auth.register_subtitle')}</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name */}
             <div>
               <label className="block text-sm font-medium text-textSecondary mb-1.5">
-                Display Name
+                {t('auth.name_label')}
               </label>
               <div className="relative">
                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-textMuted" />
@@ -145,7 +147,7 @@ export default function RegisterPage() {
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  placeholder="Your hero name"
+                  placeholder={t('auth.name_placeholder')}
                   className={cn(
                     'w-full bg-surfaceAlt border rounded-xl pl-10 pr-4 py-3 text-sm text-textPrimary',
                     'placeholder:text-textMuted transition-all duration-200',
@@ -168,7 +170,7 @@ export default function RegisterPage() {
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-textSecondary mb-1.5">
-                Email
+                {t('auth.email_label')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-textMuted" />
@@ -176,7 +178,7 @@ export default function RegisterPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
+                  placeholder={t('auth.email_placeholder')}
                   className={cn(
                     'w-full bg-surfaceAlt border rounded-xl pl-10 pr-4 py-3 text-sm text-textPrimary',
                     'placeholder:text-textMuted transition-all duration-200',
@@ -199,7 +201,7 @@ export default function RegisterPage() {
             {/* Password */}
             <div>
               <label className="block text-sm font-medium text-textSecondary mb-1.5">
-                Password
+                {t('auth.password_label')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-textMuted" />
@@ -207,7 +209,7 @@ export default function RegisterPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min. 6 characters"
+                  placeholder={t('auth.register_password_placeholder')}
                   className={cn(
                     'w-full bg-surfaceAlt border rounded-xl pl-10 pr-10 py-3 text-sm text-textPrimary',
                     'placeholder:text-textMuted transition-all duration-200',
@@ -253,10 +255,10 @@ export default function RegisterPage() {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                   />
-                  Creating account...
+                  {t('auth.creating_account')}
                 </span>
               ) : (
-                'Begin Quest 🚀'
+                t('auth.begin_quest_button')
               )}
             </motion.button>
           </form>
@@ -268,12 +270,12 @@ export default function RegisterPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          Already on a quest?{' '}
+          {t('auth.already_on_quest')} 
           <Link
             to="/login"
             className="text-primary font-medium hover:text-primaryHover transition-colors"
           >
-            Sign in →
+            {t('auth.signin_link')}
           </Link>
         </motion.p>
       </motion.div>

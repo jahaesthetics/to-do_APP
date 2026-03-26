@@ -32,7 +32,17 @@
       "Bash(pkill -f \"vite\")",
       "Bash(cmd.exe /c \"taskkill /F /IM node.exe /T 2>nul\")",
       "Bash(cmd.exe /c \"for /f \"\"tokens=5\"\" %a in \\(''netstat -ano ^| findstr :5173 ^| findstr LISTENING''\\) do taskkill /F /PID %a\")",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "Bash(find /c/Users/Жахонгир/AppData/Roaming/npm -name npm*)",
+      "Bash(export PATH=\"$PATH:/c/Program Files/nodejs\")",
+      "Bash(cmd.exe /c \"npm --version\" 2>&1)",
+      "Bash(cmd.exe /c \"cd /d D:\\\\Claude\\\\to-do_APP && npm install i18next react-i18next\" 2>&1)",
+      "Bash(cmd.exe /c \"cd /d D:\\\\Claude\\\\to-do_APP && npm install i18next react-i18next 2>&1\")",
+      "Bash(cmd.exe /c \"dir D:\\\\Claude\\\\to-do_APP\\\\node_modules\\\\i18next 2>&1\")",
+      "Bash(cmd.exe /c \"if exist D:\\\\Claude\\\\to-do_APP\\\\node_modules\\\\i18next echo EXISTS else echo NOT_FOUND\")",
+      "Bash(cmd.exe /c \"npm install i18next react-i18next --prefix D:\\\\Claude\\\\to-do_APP && echo DONE\")",
+      "Bash(echo \"exit: $?\")"
     ]
   }
 }

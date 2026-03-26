@@ -2,18 +2,19 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ShoppingBag, CheckCircle2, Lock, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { purchaseItem } from '../firebase/user'
 import { cn, formatNumber } from '../lib/utils'
 import type { ShopItem } from '../types'
 
-const SHOP_ITEMS: ShopItem[] = [
+const SHOP_ITEMS: (t: any) => ShopItem[] = (t) => [
   // Themes
   {
     id: 'midnight',
-    name: 'Midnight Blue',
-    description: 'Deep space vibes with electric blue accents',
+    name: t('shop.item_midnight_name'),
+    description: t('shop.item_midnight_desc'),
     price: 200,
     type: 'theme',
     preview: '#58a6ff',
@@ -21,32 +22,32 @@ const SHOP_ITEMS: ShopItem[] = [
   },
   {
     id: 'forest',
-    name: 'Forest Glow',
-    description: 'Fresh emerald tones for a calm focus session',
+    name: t('shop.item_forest_name'),
+    description: t('shop.item_forest_desc'),
     price: 200,
     type: 'theme',
     preview: '#4ade80',
   },
   {
     id: 'sunset',
-    name: 'Sunset Ember',
-    description: 'Warm amber and orange hues to stay energized',
+    name: t('shop.item_sunset_name'),
+    description: t('shop.item_sunset_desc'),
     price: 300,
     type: 'theme',
     preview: '#fb923c',
   },
   {
     id: 'ocean',
-    name: 'Ocean Depths',
-    description: 'Mysterious teal accents from the deep',
+    name: t('shop.item_ocean_name'),
+    description: t('shop.item_ocean_desc'),
     price: 300,
     type: 'theme',
     preview: '#22d3ee',
   },
   {
     id: 'rose',
-    name: 'Rose Quartz',
-    description: 'Soft pink elegance for creative minds',
+    name: t('shop.item_rose_name'),
+    description: t('shop.item_rose_desc'),
     price: 400,
     type: 'theme',
     preview: '#f472b6',
@@ -54,40 +55,40 @@ const SHOP_ITEMS: ShopItem[] = [
   // Avatars
   {
     id: 'warrior',
-    name: 'Warrior',
-    description: 'For those who battle tasks head-on',
+    name: t('shop.item_warrior_name'),
+    description: t('shop.item_warrior_desc'),
     price: 150,
     type: 'avatar',
     preview: '⚔️',
   },
   {
     id: 'ninja',
-    name: 'Ninja',
-    description: 'Silent. Swift. Productive.',
+    name: t('shop.item_ninja_name'),
+    description: t('shop.item_ninja_desc'),
     price: 150,
     type: 'avatar',
     preview: '🥷',
   },
   {
     id: 'astronaut',
-    name: 'Astronaut',
-    description: 'Reach for the stars in your productivity',
+    name: t('shop.item_astronaut_name'),
+    description: t('shop.item_astronaut_desc'),
     price: 250,
     type: 'avatar',
     preview: '👨‍🚀',
   },
   {
     id: 'wizard',
-    name: 'Wizard',
-    description: 'Cast spells of focus and concentration',
+    name: t('shop.item_wizard_name'),
+    description: t('shop.item_wizard_desc'),
     price: 250,
     type: 'avatar',
     preview: '🧝',
   },
   {
     id: 'dragon',
-    name: 'Dragon Lord',
-    description: 'Legendary status. For the truly dedicated.',
+    name: t('shop.item_dragon_name'),
+    description: t('shop.item_dragon_desc'),
     price: 500,
     type: 'avatar',
     preview: '🐉',
@@ -102,6 +103,7 @@ interface PurchaseConfirmProps {
 }
 
 function PurchaseConfirm({ item, onConfirm, onCancel, loading }: PurchaseConfirmProps) {
+  const { t } = useTranslation()
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -133,7 +135,7 @@ function PurchaseConfirm({ item, onConfirm, onCancel, loading }: PurchaseConfirm
           <div className="flex items-center justify-center gap-1.5 mb-5">
             <span className="text-coin text-lg">🪙</span>
             <span className="text-coin font-bold text-xl">{item.price}</span>
-            <span className="text-textMuted text-sm">coins</span>
+            <span className="text-textMuted text-sm">{t('shop.coins')}</span>
           </div>
           <div className="flex gap-3">
             <motion.button
@@ -142,7 +144,7 @@ function PurchaseConfirm({ item, onConfirm, onCancel, loading }: PurchaseConfirm
               whileTap={{ scale: 0.97 }}
               className="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border text-textSecondary hover:bg-surfaceAlt transition-all"
             >
-              Cancel
+              {t('shop.cancel')}
             </motion.button>
             <motion.button
               onClick={onConfirm}
@@ -151,7 +153,7 @@ function PurchaseConfirm({ item, onConfirm, onCancel, loading }: PurchaseConfirm
               whileTap={{ scale: 0.97 }}
               className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-primary text-white shadow-glow-sm hover:bg-primaryHover transition-all disabled:opacity-50"
             >
-              {loading ? 'Buying...' : 'Confirm 🛍️'}
+              {loading ? t('shop.buying') : t('shop.confirm')}
             </motion.button>
           </div>
         </div>
@@ -161,6 +163,7 @@ function PurchaseConfirm({ item, onConfirm, onCancel, loading }: PurchaseConfirm
 }
 
 export default function ShopPage() {
+  const { t } = useTranslation()
   const { user, profile, refreshProfile } = useAuth()
   const { setTheme } = useTheme()
   const [tab, setTab] = useState<'theme' | 'avatar'>('theme')
@@ -180,7 +183,7 @@ export default function ShopPage() {
   const handleBuy = async () => {
     if (!confirmItem || !user || !profile) return
     if (profile.coins < confirmItem.price) {
-      toast.error('Not enough coins! 😢 Complete more tasks.')
+      toast.error(t('shop.toast_no_coins'))
       setConfirmItem(null)
       return
     }
@@ -191,8 +194,8 @@ export default function ShopPage() {
       if (confirmItem.type === 'theme') {
         await setTheme(confirmItem.id)
       }
-      toast.success(`${confirmItem.name} unlocked! 🎉`, {
-        description: confirmItem.type === 'theme' ? 'Theme applied!' : 'Avatar equipped!',
+      toast.success(t('shop.toast_unlocked', { name: confirmItem.name }), {
+        description: confirmItem.type === 'theme' ? t('shop.toast_theme_applied_desc') : t('shop.toast_avatar_equipped_desc'),
       })
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Purchase failed'
@@ -207,11 +210,11 @@ export default function ShopPage() {
     if (!user || !profile) return
     if (item.type === 'theme') {
       await setTheme(item.id)
-      toast.success(`${item.name} theme applied! ✨`)
+      toast.success(t('shop.toast_theme_applied', { name: item.name }))
     }
   }
 
-  const items = SHOP_ITEMS.filter((i) => i.type === tab)
+  const items = SHOP_ITEMS(t).filter((i) => i.type === tab)
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 md:py-10 md:px-8">
@@ -224,10 +227,10 @@ export default function ShopPage() {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold text-textPrimary tracking-tight">
-              Shop 🛍️
+              {t('shop.title')}
             </h1>
             <p className="text-textSecondary text-sm mt-1">
-              Spend your hard-earned coins on exclusive upgrades
+              {t('shop.subtitle')}
             </p>
           </div>
           {/* Coin balance */}
@@ -255,26 +258,26 @@ export default function ShopPage() {
           className="mt-4 flex items-center gap-2 bg-primary/5 border border-primary/15 rounded-xl px-4 py-2.5 text-sm text-textSecondary"
         >
           <Sparkles className="w-4 h-4 text-primary flex-shrink-0" />
-          Complete tasks to earn coins (+10 per task, bonus on streaks!)
+          {t('shop.earn_hint')}
         </motion.div>
       </motion.div>
 
       {/* Tab Switcher */}
       <div className="flex gap-1 bg-surface border border-border rounded-xl p-1 mb-6">
-        {(['theme', 'avatar'] as const).map((t) => (
+        {(['theme', 'avatar'] as const).map((type) => (
           <motion.button
-            key={t}
-            onClick={() => setTab(t)}
+            key={type}
+            onClick={() => setTab(type)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={cn(
               'flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all duration-200 capitalize',
-              tab === t
+              tab === type
                 ? 'bg-primary/15 text-primary border border-primary/20'
                 : 'text-textMuted hover:text-textSecondary'
             )}
           >
-            {t === 'theme' ? '🎨' : '👤'} {t === 'theme' ? 'Themes' : 'Avatars'}
+            {type === 'theme' ? '🎨' : '👤'} {type === 'theme' ? t('shop.tab_themes') : t('shop.tab_avatars')}
           </motion.button>
         ))}
       </div>
@@ -334,12 +337,12 @@ export default function ShopPage() {
                             animate={{ scale: 1 }}
                             className="text-[10px] bg-primary/20 text-primary border border-primary/30 px-1.5 py-0.5 rounded-full font-medium"
                           >
-                            Active
+                            {t('shop.badge_active')}
                           </motion.span>
                         )}
                         {isOwned && !active && (
                           <span className="text-[10px] bg-success/20 text-success border border-success/30 px-1.5 py-0.5 rounded-full font-medium">
-                            Owned
+                            {t('shop.badge_owned')}
                           </span>
                         )}
                       </div>
@@ -366,12 +369,12 @@ export default function ShopPage() {
                           whileTap={{ scale: 0.95 }}
                           className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-success/15 text-success border border-success/25 hover:bg-success/25 transition-all"
                         >
-                          Apply ✨
+                          {t('shop.apply_btn')}
                         </motion.button>
                       ) : (
                         <div className="flex items-center gap-1 text-xs text-success">
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                          {active ? 'In use' : 'Owned'}
+                          {active ? t('shop.in_use') : t('shop.badge_owned')}
                         </div>
                       )
                     ) : (
@@ -390,12 +393,12 @@ export default function ShopPage() {
                         {canAfford ? (
                           <>
                             <ShoppingBag className="w-3.5 h-3.5" />
-                            Buy
+                            {t('shop.buy')}
                           </>
                         ) : (
                           <>
                             <Lock className="w-3 h-3" />
-                            Need {item.price - (profile?.coins ?? 0)} more
+                            {t('shop.need_more', { amount: item.price - (profile?.coins ?? 0) })}
                           </>
                         )}
                       </motion.button>

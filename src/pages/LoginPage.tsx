@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Mail, Lock, Zap, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { cn } from '../lib/utils'
 
 export default function LoginPage() {
+  const { t } = useTranslation()
   const { login } = useAuth()
   const navigate = useNavigate()
 
@@ -18,10 +20,10 @@ export default function LoginPage() {
 
   const validate = () => {
     const e: typeof errors = {}
-    if (!email) e.email = 'Email is required'
-    else if (!/\S+@\S+\.\S+/.test(email)) e.email = 'Invalid email address'
-    if (!password) e.password = 'Password is required'
-    else if (password.length < 6) e.password = 'At least 6 characters'
+    if (!email) e.email = t('auth.err_email_req')
+    else if (!/\S+@\S+\.\S+/.test(email)) e.email = t('auth.err_email_inv')
+    if (!password) e.password = t('auth.err_pass_req')
+    else if (password.length < 6) e.password = t('auth.err_pass_min')
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -32,14 +34,14 @@ export default function LoginPage() {
     setLoading(true)
     try {
       await login(email, password)
-      toast.success('Welcome back! 👋')
+      toast.success(t('auth.toast_welcome_back'))
       navigate('/tasks')
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Login failed'
       if (msg.includes('user-not-found') || msg.includes('wrong-password') || msg.includes('invalid-credential')) {
-        toast.error('Invalid email or password')
+        toast.error(t('auth.toast_err_credentials'))
       } else {
-        toast.error('Something went wrong. Try again.')
+        toast.error(t('auth.toast_err_generic'))
       }
     } finally {
       setLoading(false)
@@ -83,7 +85,7 @@ export default function LoginPage() {
           <h1 className="text-3xl font-bold text-textPrimary tracking-tight">
             Focus<span className="text-primary">Quest</span>
           </h1>
-          <p className="text-textSecondary text-sm mt-1">Turn tasks into adventures</p>
+          <p className="text-textSecondary text-sm mt-1">{t('app.logo_sub')}</p>
         </motion.div>
 
         {/* Card */}
@@ -93,14 +95,14 @@ export default function LoginPage() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.15, duration: 0.4 }}
         >
-          <h2 className="text-xl font-semibold text-textPrimary mb-1">Welcome back</h2>
-          <p className="text-textMuted text-sm mb-6">Sign in to continue your quest</p>
+          <h2 className="text-xl font-semibold text-textPrimary mb-1">{t('auth.login_title')}</h2>
+          <p className="text-textMuted text-sm mb-6">{t('auth.login_subtitle')}</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-textSecondary mb-1.5">
-                Email
+                {t('auth.email_label')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-textMuted" />
@@ -108,7 +110,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
+                  placeholder={t('auth.email_placeholder')}
                   className={cn(
                     'w-full bg-surfaceAlt border rounded-xl pl-10 pr-4 py-3 text-sm text-textPrimary',
                     'placeholder:text-textMuted transition-all duration-200',
@@ -131,7 +133,7 @@ export default function LoginPage() {
             {/* Password */}
             <div>
               <label className="block text-sm font-medium text-textSecondary mb-1.5">
-                Password
+                {t('auth.password_label')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-textMuted" />
@@ -139,7 +141,7 @@ export default function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder={t('auth.password_placeholder')}
                   className={cn(
                     'w-full bg-surfaceAlt border rounded-xl pl-10 pr-10 py-3 text-sm text-textPrimary',
                     'placeholder:text-textMuted transition-all duration-200',
@@ -187,10 +189,10 @@ export default function LoginPage() {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                   />
-                  Signing in...
+                  {t('auth.signing_in')}
                 </span>
               ) : (
-                'Sign In'
+                t('auth.signin_button')
               )}
             </motion.button>
           </form>
@@ -203,12 +205,12 @@ export default function LoginPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          New to FocusQuest?{' '}
+          {t('auth.new_to')} 
           <Link
             to="/register"
             className="text-primary font-medium hover:text-primaryHover transition-colors"
           >
-            Start your quest →
+            {t('auth.start_quest_link')}
           </Link>
         </motion.p>
       </motion.div>

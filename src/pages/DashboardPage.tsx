@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next' // Добавили импорт
 import {
   BarChart,
   Bar,
@@ -19,6 +20,7 @@ import type { Task } from '../types'
 
 // Custom Recharts tooltip
 function CustomTooltip({ active, payload, label }: TooltipProps<number, string>) {
+  const { t } = useTranslation() // Добавили перевод для тултипа
   if (!active || !payload?.length) return null
   return (
     <div className="glass rounded-xl px-3 py-2.5 border border-border shadow-glass text-xs">
@@ -27,7 +29,9 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
         <div key={p.name} className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full" style={{ background: p.color }} />
           <span className="text-textPrimary font-semibold">{p.value}</span>
-          <span className="text-textMuted capitalize">{p.name}</span>
+          <span className="text-textMuted capitalize">
+            {p.name === 'added' ? t('dashboard.legend_added') : t('dashboard.legend_completed')}
+          </span>
         </div>
       ))}
     </div>
@@ -75,6 +79,7 @@ function StatCard({
 }
 
 export default function DashboardPage() {
+  const { t } = useTranslation() // Активировали хук перевода
   const { user, profile } = useAuth()
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
@@ -95,7 +100,7 @@ export default function DashboardPage() {
       const d = new Date()
       d.setDate(d.getDate() - i)
       const dateStr = d.toISOString().slice(0, 10)
-      const label = i === 0 ? 'Today' : d.toLocaleDateString('en', { weekday: 'short' })
+      const label = i === 0 ? t('dashboard.today') : d.toLocaleDateString('en', { weekday: 'short' })
       const dayTasks = tasks.filter((t) => t.createdAt.slice(0, 10) === dateStr)
       days.push({
         date: dateStr,
@@ -146,10 +151,10 @@ export default function DashboardPage() {
         className="mb-8"
       >
         <h1 className="text-2xl font-bold text-textPrimary tracking-tight">
-          Dashboard 📊
+          {t('dashboard.title')}
         </h1>
         <p className="text-textSecondary text-sm mt-1">
-          Your productivity at a glance
+          {t('dashboard.subtitle')}
         </p>
       </motion.div>
 
@@ -157,33 +162,33 @@ export default function DashboardPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
         <StatCard
           icon={<Trophy className="w-4 h-4 text-yellow-400" />}
-          label="Level"
+          label={t('dashboard.stat_level')}
           value={level}
-          sub={`${xpProgress.current} / ${xpProgress.needed} XP`}
+          sub={t('dashboard.stat_xp_sub', { current: xpProgress.current, needed: xpProgress.needed })}
           color="bg-yellow-400/10"
           delay={0}
         />
         <StatCard
           icon={<Flame className="w-4 h-4 text-streak" />}
-          label="Streak"
+          label={t('dashboard.stat_streak')}
           value={`${profile?.streak ?? 0}🔥`}
-          sub="days in a row"
+          sub={t('dashboard.stat_streak_sub')}
           color="bg-orange-400/10"
           delay={0.05}
         />
         <StatCard
           icon={<span className="text-coin text-base">🪙</span>}
-          label="Coins"
+          label={t('dashboard.stat_coins')}
           value={formatNumber(profile?.coins ?? 0)}
-          sub="total earned"
+          sub={t('dashboard.stat_coins_sub')}
           color="bg-yellow-300/10"
           delay={0.1}
         />
         <StatCard
           icon={<Target className="w-4 h-4 text-success" />}
-          label="Completed"
+          label={t('dashboard.stat_completed')}
           value={profile?.totalTasksCompleted ?? 0}
-          sub="all time"
+          sub={t('dashboard.stat_completed_sub')}
           color="bg-green-400/10"
           delay={0.15}
         />
@@ -202,8 +207,12 @@ export default function DashboardPage() {
               <Zap className="w-4 h-4 text-primary" />
             </div>
             <div>
-              <p className="text-textPrimary text-sm font-semibold">Level {level} Explorer</p>
-              <p className="text-textMuted text-[11px]">{xpPercent}% to Level {level + 1}</p>
+              <p className="text-textPrimary text-sm font-semibold">
+                {t('dashboard.level_explorer', { level })}
+              </p>
+              <p className="text-textMuted text-[11px]">
+                {t('dashboard.xp_to_next', { percent: xpPercent, next: level + 1 })}
+              </p>
             </div>
           </div>
           <span className="text-textMuted text-xs">{xpProgress.current} XP</span>
@@ -231,9 +240,9 @@ export default function DashboardPage() {
       >
         <div className="flex items-center gap-2 mb-1">
           <TrendingUp className="w-4 h-4 text-primary" />
-          <h2 className="text-textPrimary font-semibold text-sm">Weekly Activity</h2>
+          <h2 className="text-textPrimary font-semibold text-sm">{t('dashboard.chart_title')}</h2>
         </div>
-        <p className="text-textMuted text-[11px] mb-5">Tasks added & completed — last 7 days</p>
+        <p className="text-textMuted text-[11px] mb-5">{t('dashboard.chart_sub')}</p>
 
         <ResponsiveContainer width="100%" height={180}>
           <BarChart data={chartData} barGap={4} barCategoryGap="30%">
@@ -268,11 +277,11 @@ export default function DashboardPage() {
         <div className="flex items-center gap-4 mt-2">
           <div className="flex items-center gap-1.5 text-[11px] text-textMuted">
             <span className="w-2.5 h-2.5 rounded-sm bg-primary/25" />
-            Added
+            {t('dashboard.legend_added')}
           </div>
           <div className="flex items-center gap-1.5 text-[11px] text-textMuted">
             <span className="w-2.5 h-2.5 rounded-sm bg-primary" />
-            Completed
+            {t('dashboard.legend_completed')}
           </div>
         </div>
       </motion.div>
@@ -285,7 +294,7 @@ export default function DashboardPage() {
           transition={{ delay: 0.3 }}
           className="glass rounded-xl p-5 border border-border"
         >
-          <h2 className="text-textPrimary font-semibold text-sm mb-4">Top Categories</h2>
+          <h2 className="text-textPrimary font-semibold text-sm mb-4">{t('dashboard.top_categories')}</h2>
           <div className="space-y-3">
             {categoryBreakdown.map(([cat, count], i) => {
               const maxCount = categoryBreakdown[0][1]

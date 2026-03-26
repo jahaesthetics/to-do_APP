@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Search, Filter, CheckCircle2, Circle, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
@@ -20,6 +21,7 @@ type FilterType = 'all' | 'active' | 'completed'
 const COIN_REWARD = 10
 
 export default function TasksPage() {
+  const { t } = useTranslation()
   const { user, profile, refreshProfile } = useAuth()
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
@@ -41,7 +43,7 @@ export default function TasksPage() {
     async (data: Pick<Task, 'title' | 'description' | 'priority' | 'category'>) => {
       if (!user) return
       await addTask(user.uid, data)
-      toast.success('Quest added! 🎯', { duration: 2000 })
+      toast.success(t('tasks.toast_added'), { duration: 2000 })
     },
     [user]
   )
@@ -56,17 +58,17 @@ export default function TasksPage() {
         await refreshProfile()
 
         // Coins toast
-        toast.success(`+${COIN_REWARD} Coins! 🪙`, {
+        toast.success(t('tasks.toast_coins', { coins: COIN_REWARD }), {
           description: streakBonus > 0
-            ? `Streak bonus: +${streakBonus} 🔥 (${newStreak} day streak!)`
-            : `Keep it up! 🔥 ${newStreak} day streak`,
+            ? t('tasks.toast_streak_bonus', { bonus: streakBonus, streak: newStreak })
+            : t('tasks.toast_streak_keep', { streak: newStreak }),
           duration: 3500,
         })
       })
 
       if (!wasCompleted) {
         // XP animation feedback
-        toast.success('Task complete! ⚡', { duration: 1500 })
+        toast.success(t('tasks.toast_complete'), { duration: 1500 })
       }
     },
     [user, refreshProfile]
@@ -74,7 +76,7 @@ export default function TasksPage() {
 
   const handleDelete = useCallback(async (taskId: string) => {
     await deleteTask(taskId)
-    toast.info('Task removed', { duration: 1500 })
+    toast.info(t('tasks.toast_removed'), { duration: 1500 })
   }, [])
 
   // Derive unique categories
@@ -107,7 +109,7 @@ export default function TasksPage() {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold text-textPrimary tracking-tight">
-              Your Quests
+              {t('tasks.title')}
               <motion.span
                 className="ml-2"
                 animate={{ rotate: [0, 10, -10, 0] }}
@@ -118,8 +120,8 @@ export default function TasksPage() {
             </h1>
             <p className="text-textSecondary text-sm mt-1">
               {activeTasks.length === 0
-                ? 'All clear! Add a new quest 🎉'
-                : `${activeTasks.length} quest${activeTasks.length !== 1 ? 's' : ''} remaining`}
+                ? t('tasks.all_clear')
+                : activeTasks.length === 1 ? t('tasks.remaining_quests_one') : t('tasks.remaining_quests_other', { count: activeTasks.length })}
             </p>
           </div>
 
@@ -130,8 +132,8 @@ export default function TasksPage() {
             className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-glow-sm hover:bg-primaryHover hover:shadow-glow transition-all duration-200"
           >
             <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">New Quest</span>
-            <span className="sm:hidden">Add</span>
+            <span className="hidden sm:inline">{t('tasks.new_quest_btn')}</span>
+            <span className="sm:hidden">{t('tasks.add_btn_mobile')}</span>
           </motion.button>
         </div>
 
@@ -144,8 +146,8 @@ export default function TasksPage() {
             className="mt-4"
           >
             <div className="flex justify-between text-xs text-textMuted mb-1.5">
-              <span>Daily Progress</span>
-              <span className="font-medium text-textSecondary">{completionRate}% complete</span>
+              <span>{t('tasks.daily_progress')}</span>
+              <span className="font-medium text-textSecondary">{t('tasks.complete_percent', { percent: completionRate })}</span>
             </div>
             <div className="h-2 bg-surfaceAlt rounded-full overflow-hidden border border-border/50">
               <motion.div
@@ -156,8 +158,8 @@ export default function TasksPage() {
               />
             </div>
             <div className="flex justify-between text-[11px] text-textMuted mt-1">
-              <span>{completedTasks.length} done</span>
-              <span>{tasks.length} total</span>
+              <span>{t('tasks.done_count', { count: completedTasks.length })}</span>
+              <span>{t('tasks.total_count', { count: tasks.length })}</span>
             </div>
           </motion.div>
         )}
@@ -171,9 +173,9 @@ export default function TasksPage() {
         className="grid grid-cols-3 gap-3 mb-6"
       >
         {[
-          { label: 'Active', value: activeTasks.length, icon: '⚡', color: 'text-primary' },
-          { label: 'Done', value: completedTasks.length, icon: '✅', color: 'text-success' },
-          { label: 'Coins', value: profile?.coins ?? 0, icon: '🪙', color: 'text-coin' },
+          { label: t('tasks.stat_active'), value: activeTasks.length, icon: '⚡', color: 'text-primary' },
+          { label: t('tasks.stat_done'), value: completedTasks.length, icon: '✅', color: 'text-success' },
+          { label: t('tasks.stat_coins'), value: profile?.coins ?? 0, icon: '🪙', color: 'text-coin' },
         ].map(({ label, value, icon, color }) => (
           <motion.div
             key={label}
@@ -208,7 +210,7 @@ export default function TasksPage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search quests..."
+            placeholder={t('tasks.search_placeholder')}
             className="w-full bg-surface border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-textPrimary placeholder:text-textMuted focus:outline-none focus:border-primary/50 input-glow transition-all duration-200"
           />
         </div>
@@ -231,7 +233,7 @@ export default function TasksPage() {
               {f === 'all' && <Filter className="w-3 h-3" />}
               {f === 'active' && <Circle className="w-3 h-3" />}
               {f === 'completed' && <CheckCircle2 className="w-3 h-3" />}
-              {f}
+              {t(`tasks.filter_${f}`)}
             </motion.button>
           ))}
         </div>
@@ -252,7 +254,7 @@ export default function TasksPage() {
                     : 'bg-surface border-border text-textMuted hover:text-textSecondary'
                 )}
               >
-                {cat === 'all' ? '🔍 All' : `${getCategoryEmoji(cat)} ${cat}`}
+                {cat === 'all' ? t('tasks.cat_all') : `${getCategoryEmoji(cat)} ${cat}`}
               </motion.button>
             ))}
           </div>
@@ -287,10 +289,10 @@ export default function TasksPage() {
           </motion.div>
           <p className="text-textSecondary font-medium">
             {search
-              ? 'No quests match your search'
+              ? t('tasks.empty_search')
               : filter === 'completed'
-              ? 'No completed quests yet'
-              : 'No quests yet — add one!'}
+              ? t('tasks.empty_completed')
+              : t('tasks.empty_all')}
           </p>
           {!search && filter === 'all' && (
             <motion.button
@@ -300,7 +302,7 @@ export default function TasksPage() {
               className="mt-4 flex items-center gap-2 mx-auto bg-primary/10 border border-primary/20 text-primary px-4 py-2 rounded-xl text-sm font-medium hover:bg-primary/20 transition-all"
             >
               <Sparkles className="w-4 h-4" />
-              Create your first quest
+              {t('tasks.create_first_quest')}
             </motion.button>
           )}
         </motion.div>

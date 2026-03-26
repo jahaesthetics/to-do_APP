@@ -13,13 +13,14 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import { cn, getLevelFromXP, getXPToNextLevel, formatNumber } from '../../lib/utils'
 
 const NAV_ITEMS = [
-  { to: '/tasks', icon: CheckSquare, label: 'Tasks', emoji: '✅' },
-  { to: '/dashboard', icon: BarChart2, label: 'Dashboard', emoji: '📊' },
-  { to: '/shop', icon: ShoppingBag, label: 'Shop', emoji: '🛍️' },
+  { to: '/tasks', icon: CheckSquare, labelKey: 'nav.tasks', emoji: '✅' },
+  { to: '/dashboard', icon: BarChart2, labelKey: 'nav.dashboard', emoji: '📊' },
+  { to: '/shop', icon: ShoppingBag, labelKey: 'nav.shop', emoji: '🛍️' },
 ]
 
 // Animated counter for coins/streak
@@ -56,13 +57,14 @@ function AnimatedStat({
 }
 
 export default function Sidebar() {
+  const { t } = useTranslation()
   const { profile, logout } = useAuth()
   const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const handleLogout = async () => {
     await logout()
-    toast.success('See you next time! 👋')
+    toast.success(t('nav.toast_logout'))
     navigate('/login')
   }
 
@@ -115,7 +117,7 @@ export default function Sidebar() {
                 </p>
                 <div className="flex items-center gap-1 mt-0.5">
                   <Trophy className="w-3 h-3 text-primary" />
-                  <span className="text-primary text-xs font-medium">Level {level}</span>
+                  <span className="text-primary text-xs font-medium">{t('nav.level', { level })}</span>
                 </div>
               </div>
             </div>
@@ -123,7 +125,7 @@ export default function Sidebar() {
             {/* XP Bar */}
             <div className="space-y-1">
               <div className="flex justify-between text-[10px] text-textMuted">
-                <span>XP Progress</span>
+                <span>{t('nav.xp_progress')}</span>
                 <span>{xpProgress.current} / {xpProgress.needed}</span>
               </div>
               <div className="h-1.5 bg-surface rounded-full overflow-hidden">
@@ -141,21 +143,21 @@ export default function Sidebar() {
               <AnimatedStat
                 value={profile.coins}
                 icon="🪙"
-                label="Coins"
+                label={t('stats.coins')}
                 color="text-coin"
               />
               <div className="w-px h-8 bg-border" />
               <AnimatedStat
                 value={profile.streak}
                 icon="🔥"
-                label="Streak"
+                label={t('stats.streak')}
                 color="text-streak animate-streak-pulse"
               />
               <div className="w-px h-8 bg-border" />
               <AnimatedStat
                 value={profile.totalTasksCompleted}
                 icon="✅"
-                label="Done"
+                label={t('stats.done')}
                 color="text-success"
               />
             </div>
@@ -165,7 +167,7 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1">
-        {NAV_ITEMS.map(({ to, icon: Icon, label, emoji }) => (
+        {NAV_ITEMS.map(({ to, icon: Icon, labelKey, emoji }) => (
           <NavLink
             key={to}
             to={to}
@@ -184,7 +186,7 @@ export default function Sidebar() {
               <>
                 <span className="text-base">{emoji}</span>
                 <Icon className={cn('w-4 h-4', isActive ? 'text-primary' : 'text-textMuted group-hover:text-textSecondary')} />
-                <span className="flex-1">{label}</span>
+                <span className="flex-1">{t(labelKey)}</span>
                 {isActive && (
                   <motion.div
                     layoutId="activeNav"
@@ -208,7 +210,7 @@ export default function Sidebar() {
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-textMuted hover:text-danger hover:bg-danger/10 transition-all duration-200"
         >
           <LogOut className="w-4 h-4" />
-          <span>Sign Out</span>
+          <span>{t('nav.sign_out')}</span>
         </motion.button>
       </div>
     </div>

@@ -6,11 +6,13 @@ import RegisterPage from './pages/RegisterPage'
 import TasksPage from './pages/TasksPage'
 import DashboardPage from './pages/DashboardPage'
 import ShopPage from './pages/ShopPage'
+import LanguageSwitcher from './components/LanguageSwitcher'
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <LanguageSwitcher />
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
