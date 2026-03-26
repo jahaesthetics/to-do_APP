@@ -10,7 +10,7 @@ import {
   Cell,
   type TooltipProps,
 } from 'recharts'
-import { TrendingUp, Flame, Coins, Trophy, Target, Zap } from 'lucide-react'
+import { TrendingUp, Flame, Trophy, Target, Zap } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { subscribeToTasks } from '../firebase/tasks'
 import { getLevelFromXP, getXPToNextLevel, formatNumber, getCategoryEmoji } from '../lib/utils'

@@ -31,7 +31,8 @@
       "Bash(kill %1)",
       "Bash(pkill -f \"vite\")",
       "Bash(cmd.exe /c \"taskkill /F /IM node.exe /T 2>nul\")",
-      "Bash(cmd.exe /c \"for /f \"\"tokens=5\"\" %a in \\(''netstat -ano ^| findstr :5173 ^| findstr LISTENING''\\) do taskkill /F /PID %a\")"
+      "Bash(cmd.exe /c \"for /f \"\"tokens=5\"\" %a in \\(''netstat -ano ^| findstr :5173 ^| findstr LISTENING''\\) do taskkill /F /PID %a\")",
+      "Bash(npm run:*)"
     ]
   }
 }

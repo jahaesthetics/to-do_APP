@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, CheckCircle2, Lock, Sparkles, Coins } from 'lucide-react'
+import { ShoppingBag, CheckCircle2, Lock, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
